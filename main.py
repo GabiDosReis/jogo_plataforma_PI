@@ -49,6 +49,7 @@ class TreasureHunters:
         self.player_jump_force = -22
         self.player_vertical_speed = 0
         self.player_box_colider = [46, 54]
+        self.on_ground = False
 
         # Mouse variables
         self.last_click_status = (False, False, False)
@@ -642,6 +643,9 @@ class TreasureHunters:
         if self.player_collider():
             self.player_pos[1] -= self.player_vertical_speed
             self.player_vertical_speed = 0
+            self.on_ground = True
+        else:
+            self.on_ground = False
         if self.player_animation == 0:
             self.player_idle()
         if self.player_animation == 1:
@@ -676,7 +680,7 @@ class TreasureHunters:
         elif buttom_press == False and self.player_animation == 3:
             self.player_animation = 1
 
-        if key == 'space':
+        if key == 'space' and self.on_ground:
             self.player_vertical_speed = self.player_jump_force
 
 
