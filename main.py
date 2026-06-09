@@ -1,8 +1,13 @@
+import os
 import pygame as pg
 
 
 class TreasureHunters:
+
     def __init__(self):
+        
+        pg.init()
+        self.BASE_DIR = os.path.dirname(__file__)
         self.white        = (255, 255, 255)
         self.black        = (  0,   0,   0)
         self.purple_dark  = (181, 181, 255)
@@ -49,125 +54,385 @@ class TreasureHunters:
         self.last_click_status = (False, False, False)
 
         # Captain Clown Nose (Idle)
-        player_idle_1_img = pg.image.load('./Sprites/Captain Clown Nose/Captain Clown Nose without Sword/01-Idle/Idle 01.png')
+        player_idle_1_img = self.load_image(
+            'Sprites',
+            'Captain Clown Nose',
+            'Captain Clown Nose without Sword',
+            '01-Idle',
+            'Idle 01.png'
+        )
         self.player_idle_1 = pg.transform.scale(player_idle_1_img, (128, 80))
-        player_idle_2_img = pg.image.load('./Sprites/Captain Clown Nose/Captain Clown Nose without Sword/01-Idle/Idle 02.png')
+        player_idle_2_img = self.load_image(
+            'Sprites',
+            'Captain Clown Nose',
+            'Captain Clown Nose without Sword',
+            '01-Idle',
+            'Idle 02.png'
+        )
         self.player_idle_2 = pg.transform.scale(player_idle_2_img, (128, 80))
-        player_idle_3_img = pg.image.load('./Sprites/Captain Clown Nose/Captain Clown Nose without Sword/01-Idle/Idle 03.png')
+        player_idle_3_img = self.load_image(
+            'Sprites',
+            'Captain Clown Nose',
+            'Captain Clown Nose without Sword',
+            '01-Idle',
+            'Idle 03.png'
+        )
         self.player_idle_3 = pg.transform.scale(player_idle_3_img, (128, 80))
-        player_idle_4_img = pg.image.load('./Sprites/Captain Clown Nose/Captain Clown Nose without Sword/01-Idle/Idle 04.png')
+        player_idle_4_img = self.load_image(
+            'Sprites',
+            'Captain Clown Nose',
+            'Captain Clown Nose without Sword',
+            '01-Idle',
+            'Idle 04.png'
+        )
         self.player_idle_4 = pg.transform.scale(player_idle_4_img, (128, 80))
-        player_idle_5_img = pg.image.load('./Sprites/Captain Clown Nose/Captain Clown Nose without Sword/01-Idle/Idle 05.png')
+        player_idle_5_img = self.load_image(
+            'Sprites',
+            'Captain Clown Nose',
+            'Captain Clown Nose without Sword',
+            '01-Idle',
+            'Idle 05.png'
+        )
         self.player_idle_5 = pg.transform.scale(player_idle_5_img, (128, 80))
         # Captain Clown Nose (Idle left)
-        player_idle_left_1_img = pg.image.load('./Sprites/Captain Clown Nose/Captain Clown Nose without Sword/01-Idle/Idle 01.png')
-        player_idle_left_1_img = pg.transform.flip(player_idle_left_1_img, True, False)
+        player_idle_left_1_img = self.load_image(
+            'Sprites',
+            'Captain Clown Nose',
+            'Captain Clown Nose without Sword',
+            '01-Idle',
+            'Idle 01.png'
+        )
         self.player_idle_left_1 = pg.transform.scale(player_idle_left_1_img, (128, 80))
-        player_idle_left_2_img = pg.image.load('./Sprites/Captain Clown Nose/Captain Clown Nose without Sword/01-Idle/Idle 02.png')
-        player_idle_left_2_img = pg.transform.flip(player_idle_left_2_img, True, False)
+        player_idle_left_2_img = self.load_image(
+            'Sprites',
+            'Captain Clown Nose',
+            'Captain Clown Nose without Sword',
+            '01-Idle',
+            'Idle 02.png'
+        )
         self.player_idle_left_2 = pg.transform.scale(player_idle_left_2_img, (128, 80))
-        player_idle_left_3_img = pg.image.load('./Sprites/Captain Clown Nose/Captain Clown Nose without Sword/01-Idle/Idle 03.png')
-        player_idle_left_3_img = pg.transform.flip(player_idle_left_3_img, True, False)
+        player_idle_left_3_img = self.load_image(
+            'Sprites',
+            'Captain Clown Nose',
+            'Captain Clown Nose without Sword',
+            '01-Idle',
+            'Idle 03.png'
+        )
         self.player_idle_left_3 = pg.transform.scale(player_idle_left_3_img, (128, 80))
-        player_idle_left_4_img = pg.image.load('./Sprites/Captain Clown Nose/Captain Clown Nose without Sword/01-Idle/Idle 04.png')
-        player_idle_left_4_img = pg.transform.flip(player_idle_left_4_img, True, False)
+        player_idle_left_4_img = self.load_image(
+            'Sprites',
+            'Captain Clown Nose',
+            'Captain Clown Nose without Sword',
+            '01-Idle',
+            'Idle 04.png'
+        )
         self.player_idle_left_4 = pg.transform.scale(player_idle_left_4_img, (128, 80))
-        player_idle_left_5_img = pg.image.load('./Sprites/Captain Clown Nose/Captain Clown Nose without Sword/01-Idle/Idle 05.png')
-        player_idle_left_5_img = pg.transform.flip(player_idle_left_5_img, True, False)
+        player_idle_left_5_img = self.load_image(
+            'Sprites',
+            'Captain Clown Nose',
+            'Captain Clown Nose without Sword',
+            '01-Idle',
+            'Idle 05.png'
+        )
         self.player_idle_left_5 = pg.transform.scale(player_idle_left_5_img, (128, 80))
         # Captain Clown Nose (Run right)
-        player_right_1_img = pg.image.load('./Sprites/Captain Clown Nose/Captain Clown Nose without Sword/02-Run/Run 01.png')
+        player_right_1_img = self.load_image(
+            'Sprites',
+            'Captain Clown Nose',
+            'Captain Clown Nose without Sword',
+            '02-Run',
+            'Run 01.png'
+        )
         self.player_right_1 = pg.transform.scale(player_right_1_img, (128, 80))
-        player_right_2_img = pg.image.load('./Sprites/Captain Clown Nose/Captain Clown Nose without Sword/02-Run/Run 02.png')
+        player_right_2_img = self.load_image(
+            'Sprites',
+            'Captain Clown Nose',
+            'Captain Clown Nose without Sword',
+            '02-Run',
+            'Run 02.png'
+        )
         self.player_right_2 = pg.transform.scale(player_right_2_img, (128, 80))
-        player_right_3_img = pg.image.load('./Sprites/Captain Clown Nose/Captain Clown Nose without Sword/02-Run/Run 03.png')
+        player_right_3_img = self.load_image(
+            'Sprites',
+            'Captain Clown Nose',
+            'Captain Clown Nose without Sword',
+            '02-Run',
+            'Run 03.png'
+        )
         self.player_right_3 = pg.transform.scale(player_right_3_img, (128, 80))
-        player_right_4_img = pg.image.load('./Sprites/Captain Clown Nose/Captain Clown Nose without Sword/02-Run/Run 04.png')
+        player_right_4_img = self.load_image(
+            'Sprites',
+            'Captain Clown Nose',
+            'Captain Clown Nose without Sword',
+            '02-Run',
+            'Run 04.png'
+        )
         self.player_right_4 = pg.transform.scale(player_right_4_img, (128, 80))
-        player_right_5_img = pg.image.load('./Sprites/Captain Clown Nose/Captain Clown Nose without Sword/02-Run/Run 05.png')
+        player_right_5_img = self.load_image(
+            'Sprites',
+            'Captain Clown Nose',
+            'Captain Clown Nose without Sword',
+            '02-Run',
+            'Run 05.png'
+        )
         self.player_right_5 = pg.transform.scale(player_right_5_img, (128, 80))
-        player_right_6_img = pg.image.load('./Sprites/Captain Clown Nose/Captain Clown Nose without Sword/02-Run/Run 06.png')
+        player_right_6_img = self.load_image(
+            'Sprites',
+            'Captain Clown Nose',
+            'Captain Clown Nose without Sword',
+            '02-Run',
+            'Run 06.png'
+        )
         self.player_right_6 = pg.transform.scale(player_right_6_img, (128, 80))
         # Captain Clown Nose (Run left)
-        player_left_1_img = pg.image.load('./Sprites/Captain Clown Nose/Captain Clown Nose without Sword/02-Run/Run 01.png')
+        player_left_1_img = self.load_image(
+            'Sprites',
+            'Captain Clown Nose',
+            'Captain Clown Nose without Sword',
+            '02-Run',
+            'Run 01.png'
+        )
         player_left_1_img = pg.transform.flip(player_left_1_img, True, False)
         self.player_left_1 = pg.transform.scale(player_left_1_img, (128, 80))
-        player_left_2_img = pg.image.load('./Sprites/Captain Clown Nose/Captain Clown Nose without Sword/02-Run/Run 02.png')
+        player_left_2_img = self.load_image(
+            'Sprites',
+            'Captain Clown Nose',
+            'Captain Clown Nose without Sword',
+            '02-Run',
+            'Run 02.png'
+        )
         player_left_2_img = pg.transform.flip(player_left_2_img, True, False)
         self.player_left_2 = pg.transform.scale(player_left_2_img, (128, 80))
-        player_left_3_img = pg.image.load('./Sprites/Captain Clown Nose/Captain Clown Nose without Sword/02-Run/Run 03.png')
+        player_left_3_img = self.load_image(
+            'Sprites',
+            'Captain Clown Nose',
+            'Captain Clown Nose without Sword',
+            '02-Run',
+            'Run 03.png'
+        )
         player_left_3_img = pg.transform.flip(player_left_3_img, True, False)
         self.player_left_3 = pg.transform.scale(player_left_3_img, (128, 80))
-        player_left_4_img = pg.image.load('./Sprites/Captain Clown Nose/Captain Clown Nose without Sword/02-Run/Run 04.png')
+        player_left_4_img = self.load_image(
+            'Sprites',
+            'Captain Clown Nose',
+            'Captain Clown Nose without Sword',
+            '02-Run',
+            'Run 04.png'
+        )
         player_left_4_img = pg.transform.flip(player_left_4_img, True, False)
         self.player_left_4 = pg.transform.scale(player_left_4_img, (128, 80))
-        player_left_5_img = pg.image.load('./Sprites/Captain Clown Nose/Captain Clown Nose without Sword/02-Run/Run 05.png')
+        player_left_5_img = self.load_image(
+            'Sprites',
+            'Captain Clown Nose',
+            'Captain Clown Nose without Sword',
+            '02-Run',
+            'Run 05.png'
+        )
         player_left_5_img = pg.transform.flip(player_left_5_img, True, False)
         self.player_left_5 = pg.transform.scale(player_left_5_img, (128, 80))
-        player_left_6_img = pg.image.load('./Sprites/Captain Clown Nose/Captain Clown Nose without Sword/02-Run/Run 06.png')
+        player_left_6_img = self.load_image(
+            'Sprites',
+            'Captain Clown Nose',
+            'Captain Clown Nose without Sword',
+            '02-Run',
+            'Run 06.png'
+        )
         player_left_6_img = pg.transform.flip(player_left_6_img, True, False)
         self.player_left_6 = pg.transform.scale(player_left_6_img, (128, 80))
         # Background
-        background_img = pg.image.load('./Sprites/Palm Tree Island/Background/BG Image.png')
+        background_img = self.load_image(
+            'Sprites',
+            'Palm Tree Island',
+            'Background',
+            'BG Image.png'
+        )
         self.background = pg.transform.scale(background_img, (1280, 768))
-        big_clouds_img = pg.image.load('./Sprites/Palm Tree Island/Background/Big Clouds.png')
+        big_clouds_img = self.load_image(
+            'Sprites',
+            'Palm Tree Island',
+            'Background',
+            'Big Clouds.png'
+        )
         self.big_clouds = pg.transform.scale(big_clouds_img, (896, 202))
         # Clouds
-        small_cloud_1_img = pg.image.load('./Sprites/Palm Tree Island/Background/Small Cloud 1.png')
+        small_cloud_1_img = self.load_image(
+            'Sprites',
+            'Palm Tree Island',
+            'Background',
+            'Small Cloud 1.png'
+        )
         self.small_cloud_1 = pg.transform.scale(small_cloud_1_img, (148, 48))
-        small_cloud_2_img = pg.image.load('./Sprites/Palm Tree Island/Background/Small Cloud 2.png')
+        small_cloud_2_img = self.load_image(
+            'Sprites',
+            'Palm Tree Island',
+            'Background',
+            'Small Cloud 2.png'
+        )
         self.small_cloud_2 = pg.transform.scale(small_cloud_2_img, (266, 70))
-        small_cloud_3_img = pg.image.load('./Sprites/Palm Tree Island/Background/Small Cloud 3.png')
+        small_cloud_3_img = self.load_image(
+            'Sprites',
+            'Palm Tree Island',
+            'Background',
+            'Small Cloud 3.png'
+        )
         self.small_cloud_3 = pg.transform.scale(small_cloud_3_img, (280, 78))
         # Water (Big)
         self.big_water_animation_frame = 0
-        big_water_1_img = pg.image.load('./Sprites/Palm Tree Island/Background/Water Reflect Big 01.png')
+        big_water_1_img = self.load_image(
+            'Sprites',
+            'Palm Tree Island',
+            'Background',
+            'Water Reflect Big 01.png'
+        )
         self.big_water_1 = pg.transform.scale(big_water_1_img, (340, 20))
-        big_water_2_img = pg.image.load('./Sprites/Palm Tree Island/Background/Water Reflect Big 02.png')
+        big_water_2_img = self.load_image(
+            'Sprites',
+            'Palm Tree Island',
+            'Background',
+            'Water Reflect Big 02.png'
+        )
         self.big_water_2 = pg.transform.scale(big_water_2_img, (340, 20))
-        big_water_3_img = pg.image.load('./Sprites/Palm Tree Island/Background/Water Reflect Big 03.png')
+        big_water_3_img = self.load_image(
+            'Sprites',
+            'Palm Tree Island',
+            'Background',
+            'Water Reflect Big 03.png'
+        )
         self.big_water_3 = pg.transform.scale(big_water_3_img, (340, 20))
-        big_water_4_img = pg.image.load('./Sprites/Palm Tree Island/Background/Water Reflect Big 04.png')
+        big_water_4_img = self.load_image(
+            'Sprites',
+            'Palm Tree Island',
+            'Background',
+            'Water Reflect Big 04.png'
+        )
         self.big_water_4 = pg.transform.scale(big_water_4_img, (340, 20))
         # Water (Medium)
         self.medium_water_animation_frame = 0
-        medium_water_1_img = pg.image.load('./Sprites/Palm Tree Island/Background/Water Reflect Medium 01.png')
+        medium_water_1_img = self.load_image(
+            'Sprites',
+            'Palm Tree Island',
+            'Background',
+            'Water Reflect Medium 01.png'
+        )
         self.medium_water_1 = pg.transform.scale(medium_water_1_img, (106, 6))
-        medium_water_2_img = pg.image.load('./Sprites/Palm Tree Island/Background/Water Reflect Medium 02.png')
+        medium_water_2_img = self.load_image(
+            'Sprites',
+            'Palm Tree Island',
+            'Background',
+            'Water Reflect Medium 02.png'
+        )
         self.medium_water_2 = pg.transform.scale(medium_water_2_img, (106, 6))
-        medium_water_3_img = pg.image.load('./Sprites/Palm Tree Island/Background/Water Reflect Medium 03.png')
+        medium_water_3_img = self.load_image(
+            'Sprites',
+            'Palm Tree Island',
+            'Background',
+            'Water Reflect Medium 03.png'
+        )
         self.medium_water_3 = pg.transform.scale(medium_water_3_img, (106, 6))
-        medium_water_4_img = pg.image.load('./Sprites/Palm Tree Island/Background/Water Reflect Medium 04.png')
+        medium_water_4_img = self.load_image(
+            'Sprites',
+            'Palm Tree Island',
+            'Background',
+            'Water Reflect Medium 04.png'
+        )
         self.medium_water_4 = pg.transform.scale(medium_water_4_img, (106, 6))
         # Water (Small)
         self.small_water_animation_frame = 0
-        small_water_1_img = pg.image.load('./Sprites/Palm Tree Island/Background/Water Reflect Small 01.png')
+        small_water_1_img = self.load_image(
+            'Sprites',
+            'Palm Tree Island',
+            'Background',
+            'Water Reflect Small 01.png'
+        )
         self.small_water_1 = pg.transform.scale(small_water_1_img, (70, 6))
-        small_water_2_img = pg.image.load('./Sprites/Palm Tree Island/Background/Water Reflect Small 02.png')
+        small_water_2_img = self.load_image(
+            'Sprites',
+            'Palm Tree Island',
+            'Background',
+            'Water Reflect Small 02.png'
+        )
         self.small_water_2 = pg.transform.scale(small_water_2_img, (70, 6))
-        small_water_3_img = pg.image.load('./Sprites/Palm Tree Island/Background/Water Reflect Small 03.png')
+        small_water_3_img = self.load_image(
+            'Sprites',
+            'Palm Tree Island',
+            'Background',
+            'Water Reflect Small 03.png'
+        )
         self.small_water_3 = pg.transform.scale(small_water_3_img, (70, 6))
-        small_water_4_img = pg.image.load('./Sprites/Palm Tree Island/Background/Water Reflect Small 04.png')
+        small_water_4_img = self.load_image(
+            'Sprites',
+            'Palm Tree Island',
+            'Background',
+            'Water Reflect Small 04.png'
+        )
         self.small_water_4 = pg.transform.scale(small_water_4_img, (70, 6))
         # Terrain
-        ground_1_img = pg.image.load('./Sprites/Palm Tree Island/Terrain/ground_1.png')
+        ground_1_img = self.load_image(
+            'Sprites',
+            'Palm Tree Island',
+            'Terrain',
+            'ground_1.png'
+        )
         self.ground_1 = pg.transform.scale(ground_1_img, (64, 64))
-        ground_2_img = pg.image.load('./Sprites/Palm Tree Island/Terrain/ground_2.png')
+        ground_2_img = self.load_image(
+            'Sprites',
+            'Palm Tree Island',
+            'Terrain',
+            'ground_2.png'
+        )
         self.ground_2 = pg.transform.scale(ground_2_img, (64, 64))
-        ground_3_img = pg.image.load('./Sprites/Palm Tree Island/Terrain/ground_3.png')
+        ground_3_img = self.load_image(
+            'Sprites',
+            'Palm Tree Island',
+            'Terrain',
+            'ground_3.png'
+        )
         self.ground_3 = pg.transform.scale(ground_3_img, (64, 64))
-        ground_4_img = pg.image.load('./Sprites/Palm Tree Island/Terrain/ground_4.png')
+        ground_4_img = self.load_image(
+            'Sprites',
+            'Palm Tree Island',
+            'Terrain',
+            'ground_4.png'
+        )
         self.ground_4 = pg.transform.scale(ground_4_img, (64, 64))
-        ground_5_img = pg.image.load('./Sprites/Palm Tree Island/Terrain/ground_5.png')
+        ground_5_img = self.load_image(
+            'Sprites',
+            'Palm Tree Island',
+            'Terrain',
+            'ground_5.png'
+        )
         self.ground_5 = pg.transform.scale(ground_5_img, (64, 64))
-        ground_6_img = pg.image.load('./Sprites/Palm Tree Island/Terrain/ground_6.png')
+        ground_6_img = self.load_image(
+            'Sprites',
+            'Palm Tree Island',
+            'Terrain',
+            'ground_1.png'
+        )
         self.ground_6 = pg.transform.scale(ground_6_img, (64, 64))
-        ground_7_img = pg.image.load('./Sprites/Palm Tree Island/Terrain/ground_7.png')
+        ground_7_img = self.load_image(
+            'Sprites',
+            'Palm Tree Island',
+            'Terrain',
+            'ground_7.png'
+        )
         self.ground_7 = pg.transform.scale(ground_7_img, (64, 64))
-        ground_8_img = pg.image.load('./Sprites/Palm Tree Island/Terrain/ground_8.png')
+        ground_8_img = self.load_image(
+            'Sprites',
+            'Palm Tree Island',
+            'Terrain',
+            'ground_8.png'
+        )
         self.ground_8 = pg.transform.scale(ground_8_img, (64, 64))
-        ground_9_img = pg.image.load('./Sprites/Palm Tree Island/Terrain/ground_9.png')
+        ground_9_img = self.load_image(
+            'Sprites',
+            'Palm Tree Island',
+            'Terrain',
+            'ground_9.png'
+        )
         self.ground_9 = pg.transform.scale(ground_9_img, (64, 64))
+
+    def load_image(self, *path):
+        return pg.image.load(os.path.join(self.BASE_DIR, *path))
 
 
     def mouse_has_clicked(self, input):
