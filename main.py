@@ -23,18 +23,31 @@ class TreasureHunters:
 
         self.clock = pg.time.Clock()
 
-        self.map = [[' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
-                    [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
-                    [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
-                    [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
-                    [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
-                    [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
-                    [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
-                    [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','1','3',' ','1','2','2'],
-                    [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','1','2','3',' ','7','9',' ','4','5','5'],
-                    [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','7','8','9',' ',' ',' ',' ','4','5','5'],
-                    [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','4','5','5'],
-                    ['2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','5','5','5']]
+        self.map = [
+        [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+
+        [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+
+        [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+
+        [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+
+        [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+
+        [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+
+        [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+
+        [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','1','3',' ','1','2','3',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+
+        [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','1','2','3',' ','7','9',' ','4','5','6',' ',' ',' ','1','2','3',' ',' ',' ','1','2','3',' ',' ',' ','1','2','3',' ',' '],
+
+        [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','7','8','9',' ',' ',' ',' ','4','5','6',' ',' ',' ','7','8','9',' ',' ',' ','7','8','9',' ',' ',' ','7','8','9',' ',' '],
+
+        [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','4','5','6',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+
+        ['2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','5','5','6',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ']
+        ]
 
         self.gravity = 1
 
@@ -49,7 +62,12 @@ class TreasureHunters:
         self.player_jump_force = -22
         self.player_vertical_speed = 0
         self.player_box_colider = [46, 54]
+        
         self.on_ground = False
+
+        self.camera_x = 0
+        self.camera_y = 0
+        self.game_over = False
 
         # Mouse variables
         self.last_click_status = (False, False, False)
@@ -407,7 +425,7 @@ class TreasureHunters:
             'Sprites',
             'Palm Tree Island',
             'Terrain',
-            'ground_1.png'
+            'ground_6.png'
         )
         self.ground_6 = pg.transform.scale(ground_6_img, (64, 64))
         ground_7_img = self.load_image(
@@ -540,84 +558,219 @@ class TreasureHunters:
             for x in range(range_x):
                 if self.map[y][x] != ' ':
                     if self.map[y][x] == '1':
-                        self.window.blit(self.ground_1, (x * 64, y * 64))
+                        self.window.blit(
+                            self.ground_1,
+                            (
+                                x * 64 - self.camera_x,
+                                y * 64 - self.camera_y
+                            )
+                        )
                     elif self.map[y][x] == '2':
-                        self.window.blit(self.ground_2, (x * 64, y * 64))
+                        self.window.blit(
+                            self.ground_2,
+                            (
+                                x * 64 - self.camera_x,
+                                y * 64 - self.camera_y
+                            )
+                        )
                     elif self.map[y][x] == '3':
-                        self.window.blit(self.ground_3, (x * 64, y * 64))
+                        self.window.blit(
+                            self.ground_3,
+                            (
+                                x * 64 - self.camera_x,
+                                y * 64 - self.camera_y
+                            )
+                        )
                     elif self.map[y][x] == '4':
-                        self.window.blit(self.ground_4, (x * 64, y * 64))
+                        self.window.blit(
+                            self.ground_4,
+                            (
+                                x * 64 - self.camera_x,
+                                y * 64 - self.camera_y
+                            )
+                        )
                     elif self.map[y][x] == '5':
-                        self.window.blit(self.ground_5, (x * 64, y * 64))
+                        self.window.blit(
+                            self.ground_5,
+                            (
+                                x * 64 - self.camera_x,
+                                y * 64 - self.camera_y
+                            )
+                        )
                     elif self.map[y][x] == '6':
-                        self.window.blit(self.ground_6, (x * 64, y * 64))
+                        self.window.blit(
+                            self.ground_6,
+                            (
+                                x * 64 - self.camera_x,
+                                y * 64 - self.camera_y
+                            )
+                        )
                     elif self.map[y][x] == '7':
-                        self.window.blit(self.ground_7, (x * 64, y * 64))
+                        self.window.blit(
+                            self.ground_7,
+                            (
+                                x * 64 - self.camera_x,
+                                y * 64 - self.camera_y
+                            )
+                        )
                     elif self.map[y][x] == '8':
-                        self.window.blit(self.ground_8, (x * 64, y * 64))
+                        self.window.blit(
+                            self.ground_8,
+                            (
+                                x * 64 - self.camera_x,
+                                y * 64 - self.camera_y
+                            )
+                        )
                     elif self.map[y][x] == '9':
-                        self.window.blit(self.ground_9, (x * 64, y * 64))
+                        self.window.blit(
+                            self.ground_9,
+                            (
+                                x * 64 - self.camera_x,
+                                y * 64 - self.camera_y
+                            )
+                        )
 
     def player_idle(self):
         if self.player_animation_frame <= 7:
-            self.window.blit(self.player_idle_1, (self.player_pos[0], self.player_pos[1]))
+            self.window.blit(
+                self.player_idle_1,
+                (
+                    self.player_pos[0] - self.camera_x,
+                    self.player_pos[1] - self.camera_y
+                )
+            )
         elif self.player_animation_frame <= 14:
-            self.window.blit(self.player_idle_2, (self.player_pos[0], self.player_pos[1]))
+            self.window.blit(
+                self.player_idle_2,
+                (
+                    self.player_pos[0] - self.camera_x,
+                    self.player_pos[1] - self.camera_y
+                )
+            )
         elif self.player_animation_frame <= 21:
-            self.window.blit(self.player_idle_3, (self.player_pos[0], self.player_pos[1]))
+            self.window.blit(
+                self.player_idle_3,
+                (
+                    self.player_pos[0] - self.camera_x,
+                    self.player_pos[1] - self.camera_y
+                )
+            )
         elif self.player_animation_frame <= 28:
-            self.window.blit(self.player_idle_4, (self.player_pos[0], self.player_pos[1]))
+            self.window.blit(
+                self.player_idle_4,
+                (
+                    self.player_pos[0] - self.camera_x,
+                    self.player_pos[1] - self.camera_y
+                )
+            )
         elif self.player_animation_frame <= 35:
-            self.window.blit(self.player_idle_5, (self.player_pos[0], self.player_pos[1]))
+            self.window.blit(
+                self.player_idle_5,
+                (
+                    self.player_pos[0] - self.camera_x,
+                    self.player_pos[1] - self.camera_y
+                )
+            )
         self.player_animation_frame += 1
         if self.player_animation_frame > 35:
             self.player_animation_frame = 0
 
     def player_idle_left(self):
         if self.player_animation_frame <= 7:
-            self.window.blit(self.player_idle_left_1, (self.player_pos[0], self.player_pos[1]))
+            self.window.blit(self.player_idle_left_1, (
+            self.player_pos[0] - self.camera_x,
+            self.player_pos[1] - self.camera_y
+        ))
         elif self.player_animation_frame <= 14:
-            self.window.blit(self.player_idle_left_2, (self.player_pos[0], self.player_pos[1]))
+            self.window.blit(self.player_idle_left_2, (
+            self.player_pos[0] - self.camera_x,
+            self.player_pos[1] - self.camera_y
+        ))
         elif self.player_animation_frame <= 21:
-            self.window.blit(self.player_idle_left_3, (self.player_pos[0], self.player_pos[1]))
+            self.window.blit(self.player_idle_left_3, (
+            self.player_pos[0] - self.camera_x,
+            self.player_pos[1] - self.camera_y
+        ))
         elif self.player_animation_frame <= 28:
-            self.window.blit(self.player_idle_left_4, (self.player_pos[0], self.player_pos[1]))
+            self.window.blit(self.player_idle_left_4, (
+            self.player_pos[0] - self.camera_x,
+            self.player_pos[1] - self.camera_y
+        ))
         elif self.player_animation_frame <= 35:
-            self.window.blit(self.player_idle_left_5, (self.player_pos[0], self.player_pos[1]))
+            self.window.blit(self.player_idle_left_5, (
+            self.player_pos[0] - self.camera_x,
+            self.player_pos[1] - self.camera_y
+        ))
         self.player_animation_frame += 1
         if self.player_animation_frame > 35:
             self.player_animation_frame = 0
 
     def player_right(self):
         if self.player_animation_frame <= 7:
-            self.window.blit(self.player_right_1, (self.player_pos[0], self.player_pos[1]))
+            self.window.blit(self.player_right_1, (
+            self.player_pos[0] - self.camera_x,
+            self.player_pos[1] - self.camera_y
+        ))
         elif self.player_animation_frame <= 14:
-            self.window.blit(self.player_right_2, (self.player_pos[0], self.player_pos[1]))
+            self.window.blit(self.player_right_2, (
+            self.player_pos[0] - self.camera_x,
+            self.player_pos[1] - self.camera_y
+        ))
         elif self.player_animation_frame <= 21:
-            self.window.blit(self.player_right_3, (self.player_pos[0], self.player_pos[1]))
+            self.window.blit(self.player_right_3, (
+            self.player_pos[0] - self.camera_x,
+            self.player_pos[1] - self.camera_y
+        ))
         elif self.player_animation_frame <= 28:
-            self.window.blit(self.player_right_4, (self.player_pos[0], self.player_pos[1]))
+            self.window.blit(self.player_right_4, (
+            self.player_pos[0] - self.camera_x,
+            self.player_pos[1] - self.camera_y
+        ))
         elif self.player_animation_frame <= 35:
-            self.window.blit(self.player_right_5, (self.player_pos[0], self.player_pos[1]))
+            self.window.blit(self.player_right_5, (
+            self.player_pos[0] - self.camera_x,
+            self.player_pos[1] - self.camera_y
+        ))
         elif self.player_animation_frame <= 42:
-            self.window.blit(self.player_right_6, (self.player_pos[0], self.player_pos[1]))
+            self.window.blit(self.player_right_6, (
+            self.player_pos[0] - self.camera_x,
+            self.player_pos[1] - self.camera_y
+        ))
         self.player_animation_frame += 1
         if self.player_animation_frame > 42:
             self.player_animation_frame = 0
 
     def player_left(self):
         if self.player_animation_frame <= 7:
-            self.window.blit(self.player_left_1, (self.player_pos[0], self.player_pos[1]))
+            self.window.blit(self.player_left_1, (
+            self.player_pos[0] - self.camera_x,
+            self.player_pos[1] - self.camera_y
+        ))
         elif self.player_animation_frame <= 14:
-            self.window.blit(self.player_left_2, (self.player_pos[0], self.player_pos[1]))
+            self.window.blit(self.player_left_2, (
+            self.player_pos[0] - self.camera_x,
+            self.player_pos[1] - self.camera_y
+        ))
         elif self.player_animation_frame <= 21:
-            self.window.blit(self.player_left_3, (self.player_pos[0], self.player_pos[1]))
+            self.window.blit(self.player_left_3, (
+            self.player_pos[0] - self.camera_x,
+            self.player_pos[1] - self.camera_y
+        ))
         elif self.player_animation_frame <= 28:
-            self.window.blit(self.player_left_4, (self.player_pos[0], self.player_pos[1]))
+            self.window.blit(self.player_left_4, (
+            self.player_pos[0] - self.camera_x,
+            self.player_pos[1] - self.camera_y
+        ))
         elif self.player_animation_frame <= 35:
-            self.window.blit(self.player_left_5, (self.player_pos[0], self.player_pos[1]))
+            self.window.blit(self.player_left_5, (
+            self.player_pos[0] - self.camera_x,
+            self.player_pos[1] - self.camera_y
+        ))
         elif self.player_animation_frame <= 42:
-            self.window.blit(self.player_left_6, (self.player_pos[0], self.player_pos[1]))
+            self.window.blit(self.player_left_6, (
+            self.player_pos[0] - self.camera_x,
+            self.player_pos[1] - self.camera_y
+        ))
         self.player_animation_frame += 1
         if self.player_animation_frame > 42:
             self.player_animation_frame = 0
@@ -640,6 +793,8 @@ class TreasureHunters:
     def player(self):
         self.player_vertical_speed += self.gravity
         self.player_pos[1] += self.player_vertical_speed
+        if self.player_pos[1] > len(self.map) * 64 + 300:
+            self.game_over = True
         if self.player_collider():
             self.player_pos[1] -= self.player_vertical_speed
             self.player_vertical_speed = 0
@@ -655,17 +810,32 @@ class TreasureHunters:
         if self.player_animation == 3:
             self.player_left()
 
+    def camera(self):
+        map_width = len(self.map[0]) * 64
+        map_height = len(self.map) * 64
+
+        self.camera_x = self.player_pos[0] - 640
+        self.camera_y = self.player_pos[1] - 384
+
+        if self.camera_x < 0:
+            self.camera_x = 0
+
+        if self.camera_y < 0:
+            self.camera_y = 0
+
+        if self.camera_x > map_width - 1280:
+            self.camera_x = map_width - 1280
+
+        if self.camera_y > map_height - 768:
+            self.camera_y = map_height - 768
+
     def move(self, array, key):
+
+        if self.game_over:
+            return
+        
         buttom_press = False
 
-        # Left
-        if array[97] == True:
-            self.player_pos[0] -= 5
-            if self.player_collider():
-                self.player_pos[0] += 5
-            else:
-                self.player_animation = 3
-                buttom_press = True
         # Right
         if array[100] == True:
             self.player_pos[0] += 5
@@ -675,13 +845,57 @@ class TreasureHunters:
                 self.player_animation = 2
                 buttom_press = True
 
+        # Left
+        if array[97] == True:
+            self.player_pos[0] -= 5
+            if self.player_collider():
+                self.player_pos[0] += 5
+            else:
+                self.player_animation = 3
+                buttom_press = True
+
         if buttom_press == False and self.player_animation == 2:
             self.player_animation = 0
         elif buttom_press == False and self.player_animation == 3:
             self.player_animation = 1
 
+        map_width = len(self.map[0]) * 64
+        map_height = len(self.map) * 64
+
+        if self.player_pos[0] < 0:
+            self.player_pos[0] = 0
+
+        if self.player_pos[0] > map_width - 128:
+            self.player_pos[0] = map_width - 128
+
+        if self.player_pos[1] < 0:
+            self.player_pos[1] = 0
+
         if key == 'space' and self.on_ground:
             self.player_vertical_speed = self.player_jump_force
+            
+    def draw_game_over(self):
+
+        dark = pg.Surface((1280, 768))
+        dark.set_alpha(180)
+        dark.fill((0, 0, 0))
+
+        self.window.blit(dark, (0, 0))
+
+        game_over_text = self.font.render(
+            'GAME OVER',
+            True,
+            (255, 255, 255)
+        )
+
+        restart_text = self.font.render(
+            'APERTE R PARA REINICIAR',
+            True,
+            (255, 255, 255)
+        )
+
+        self.window.blit(game_over_text, (430, 250))
+        self.window.blit(restart_text, (250, 350))
 
 
 jogo = TreasureHunters()
@@ -693,6 +907,8 @@ while True:
             pg.quit()
             quit()
         if event.type == pg.KEYDOWN:
+            if jogo.game_over and pg.key.name(event.key) == 'r':
+                jogo = TreasureHunters()
             jogo.move(pg.key.get_pressed(), pg.key.name(event.key))
             if pg.key.name(event.key) == 'escape':
                 pg.quit()
@@ -707,9 +923,14 @@ while True:
     # Game
     jogo.clock.tick(60)
     jogo.move(pg.key.get_pressed(), '')
+    jogo.camera()
     jogo.background_imgs()
     jogo.tiles()
-    jogo.player()
+    if not jogo.game_over:
+        jogo.player()
+
+    if jogo.game_over:
+        jogo.draw_game_over()
 
     jogo.last_click_status = mouse_input
 
