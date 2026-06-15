@@ -38,7 +38,7 @@ class TreasureHunters:
 
         [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','1','2','3',' ',' ','7','8','9',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
 
-        [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','1','3',' ','1','2','3',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','1','2','3',' ',' ','7','8','9',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+        [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','M',' ',' ','1','3',' ','1','2','3',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','1','2','3',' ',' ','7','8','9',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
 
         [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','1','2','3',' ','7','9',' ','4','5','6',' ',' ',' ','1','2','3',' ',' ',' ','1','2','3',' ',' ',' ','1','2','3',' ',' ',' ','1','2','3',' ',' ',' ',' ',' ',' ',' ',' ','1','2','3',' ',' ','7','8','9',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
 
@@ -61,6 +61,8 @@ class TreasureHunters:
         self.player_jump_force = -22
         self.player_vertical_speed = 0
         self.player_box_colider = [46, 54]
+
+        self.coins = 0
         
         self.on_ground = False
 
@@ -450,6 +452,16 @@ class TreasureHunters:
             'ground_9.png'
         )
         self.ground_9 = pg.transform.scale(ground_9_img, (64, 64))
+
+        coin_img = self.load_image(
+            'Sprites',
+            'Palm Tree Island',
+            'Objetos',
+            'moeda.png'
+        )
+
+        self.coin = pg.transform.scale(coin_img, (64, 64))
+
         flag_img = self.load_image(
             'Sprites',
             'Palm Tree Island',
@@ -457,6 +469,7 @@ class TreasureHunters:
             'Bandeira_final.png'
         )
         self.flag = pg.transform.scale(flag_img, (64, 64))
+
 
     def load_image(self, *path):
         return pg.image.load(os.path.join(self.BASE_DIR, *path))
@@ -646,9 +659,51 @@ class TreasureHunters:
                                 y * 64 - self.camera_y
                             )
                         )
+
+                    elif self.map[y][x] == 'M':
+                        self.window.blit(
+                            self.coin,
+                            (
+                                x * 64 - self.camera_x,
+                                y * 64 - self.camera_y
+                            )
+                        )
                         
+    def collect_coins(self):
 
+        player_rect = pg.Rect(
+            self.player_pos[0] + 40,
+            self.player_pos[1] + 8,
+            self.player_box_colider[0],
+            self.player_box_colider[1]
+        )
 
+        for y in range(len(self.map)):
+            for x in range(len(self.map[0])):
+
+                if self.map[y][x] == 'M':
+
+                    coin_rect = pg.Rect(
+                        x * 64,
+                        y * 64,
+                        64,
+                        64
+                    )
+
+                    if player_rect.colliderect(coin_rect):
+
+                        self.map[y][x] = ' '
+                        self.coins += 1
+    
+    def draw_coins(self):
+
+        text = self.font.render(
+            f"MOEDAS: {self.coins}",
+            True,
+            (255,255,255)
+        )
+
+        self.window.blit(text, (20, 20))
     
     def check_win(self):
         player_rect = pg.Rect(
@@ -984,9 +1039,11 @@ while True:
     jogo.camera()
     jogo.background_imgs()
     jogo.tiles()
+    jogo.draw_coins()
 
     if not jogo.game_over and not jogo.win:
         jogo.player()
+        jogo.collect_coins()
         jogo.check_win()
 
     if jogo.game_over:
