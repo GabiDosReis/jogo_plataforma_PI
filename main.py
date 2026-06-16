@@ -1,6 +1,6 @@
 import os
 import pygame as pg
-
+import random
 
 class TreasureHunters:
 
@@ -46,15 +46,19 @@ class TreasureHunters:
 
         [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','4','5','6',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','7','8','9',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','1','2','2','2','3',' '],
 
-        ['2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','5','5','6',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','7','8','8','8','9',' ']        ]
+        ['2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','5','5','6',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','7','8','8','8','9',' ']
+        ]
 
+        #gravidade
         self.gravity = 1
 
+        #nuvens
         self.big_clouds_pos = 0
         self.small_cloud_1_pos = 0
         self.small_cloud_2_pos = 0
         self.small_cloud_3_pos = 0
         
+        #jogador
         self.player_animation = 0
         self.player_animation_frame = 0
         self.player_pos = [300, 600]
@@ -62,13 +66,31 @@ class TreasureHunters:
         self.player_vertical_speed = 0
         self.player_box_colider = [46, 54]
 
+        #moedas
         self.coins = 0
-        
+
+        #bombas
+        self.bomb_warnings = []
+        self.warning_timer = 0
+        self.warning_interval = 45  # 0,75 segundos em 60 FPS
+        self.warning_time = 0
+        self.bomb_speed = 25
+
+        self.warning_duration = 30   # 0,50s
+        self.warning_delay = 180     # 3,5s
+
+        self.warning_active = False
+
+        self.bombs = []
+
+        #piso
         self.on_ground = False
 
+        #camera
         self.camera_x = 0
         self.camera_y = 0
 
+        #vitoria/gameover
         self.win = False
         self.game_over = False
 
@@ -704,6 +726,151 @@ class TreasureHunters:
         )
 
         self.window.blit(text, (20, 20))
+
+    def draw_bomb_warnings(self):
+
+        if not self.warning_active:
+            return
+
+        if self.warning_time % 20 < 10:
+
+            for warning in self.bomb_warnings:
+
+                pg.draw.line(
+                    self.window,
+                    (255,0,0),
+                    (warning["x"] - self.camera_x, 0),
+                    (warning["x"] - self.camera_x, 768),
+                    4
+                )
+
+    def create_warnings(self):
+
+        self.bomb_warnings.clear()
+
+        distancia_minima = 150
+
+        tentativas = 0
+
+        while len(self.bomb_warnings) < 5 and tentativas < 100:
+
+            tentativas += 1
+
+            x = random.randint(
+                self.camera_x,
+                self.camera_x + 1280
+            )
+
+            valido = True
+
+            for warning in self.bomb_warnings:
+
+                if abs(x - warning["x"]) < distancia_minima:
+
+                    valido = False
+                    break
+
+            if valido:
+
+                self.bomb_warnings.append({
+                    "x": x
+                })
+
+    def bomb_manager(self):
+
+        self.warning_time += 1
+
+        if not self.warning_active:
+
+            if self.warning_time >= self.warning_delay:
+
+                self.create_warnings()
+
+                self.warning_active = True
+
+                self.warning_time = 0
+
+        else:
+
+            if self.warning_time >= self.warning_duration:
+
+                for warning in self.bomb_warnings:
+
+                    self.bombs.append({
+                        "x": warning["x"],
+                        "y": -100,
+                        "speed": self.bomb_speed
+                    })
+
+                self.bomb_warnings.clear()
+
+                self.warning_active = False
+
+                self.warning_time = 0
+
+    def draw_bombs(self):
+
+        for bomb in self.bombs:
+
+            pg.draw.circle(
+                self.window,
+                (0,0,0),
+                (
+                    int(bomb["x"] - self.camera_x),
+                    int(bomb["y"] - self.camera_y)
+                ),
+                20
+            )
+
+    def update_bombs(self):
+
+        bombs_to_remove = []
+
+        player_rect = pg.Rect(
+            self.player_pos[0] + 40,
+            self.player_pos[1] + 8,
+            self.player_box_colider[0],
+            self.player_box_colider[1]
+        )
+
+        for bomb in self.bombs:
+
+            bomb["y"] += bomb["speed"]
+
+            bomb_rect = pg.Rect(
+                bomb["x"] - 20,
+                bomb["y"] - 20,
+                40,
+                40
+            )
+            if bomb_rect.colliderect(player_rect):
+
+                self.game_over = True
+                bombs_to_remove.append(bomb)
+                continue
+
+            tile_x = int(bomb["x"] // 64)
+            tile_y = int(bomb["y"] // 64)
+
+            if (
+                0 <= tile_y < len(self.map)
+                and
+                0 <= tile_x < len(self.map[0])
+            ):
+                
+                tile = self.map[tile_y][tile_x]
+
+                if tile in ['1','2','3','4','5','6','7','8','9']:
+                    bombs_to_remove.append(bomb)
+                    continue
+
+            if bomb["y"] > len(self.map) * 64 + 200:
+                bombs_to_remove.append(bomb)
+        
+        for bomb in bombs_to_remove:
+
+            if bomb in self.bombs:
+                self.bombs.remove(bomb)
     
     def check_win(self):
         player_rect = pg.Rect(
@@ -1009,6 +1176,7 @@ class TreasureHunters:
 
         self.window.blit(game_over_text, (430, 250))
         self.window.blit(restart_text, (250, 350))
+        
 
 
 jogo = TreasureHunters()
@@ -1039,6 +1207,10 @@ while True:
     jogo.camera()
     jogo.background_imgs()
     jogo.tiles()
+    jogo.bomb_manager()
+    jogo.draw_bomb_warnings()
+    jogo.update_bombs()
+    jogo.draw_bombs()
     jogo.draw_coins()
 
     if not jogo.game_over and not jogo.win:
