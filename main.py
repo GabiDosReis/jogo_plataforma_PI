@@ -77,11 +77,24 @@ class TreasureHunters:
         self.bomb_speed = 25
 
         self.warning_duration = 30   # 0,50s
-        self.warning_delay = 180     # 3,5s
+        self.warning_delay = 180    # 3,5s
+
+        self.warning_surface = pg.Surface(
+            (40, 768),
+            pg.SRCALPHA
+        )
+
+        self.warning_font = pg.font.SysFont(
+            "Arial",
+            60,
+            bold=True
+        )
 
         self.warning_active = False
 
         self.bombs = []
+
+        self.explosions = []
 
         #piso
         self.on_ground = False
@@ -492,6 +505,30 @@ class TreasureHunters:
         )
         self.flag = pg.transform.scale(flag_img, (64, 64))
 
+        bomb_img = self.load_image(
+            'Sprites',
+            'Palm Tree Island',
+            'Objetos',
+            'bomba.png'
+        )
+
+        self.bomb_img = pg.transform.scale(
+            bomb_img,
+            (40, 40)
+        )
+
+        self.explosion_frames = [
+            pg.transform.scale(
+                self.load_image(
+                    'Sprites',
+                    'Palm Tree Island',
+                    'Objetos',
+                    'explosão.png'
+                ),
+                (100,100)
+            )
+        ]
+
 
     def load_image(self, *path):
         return pg.image.load(os.path.join(self.BASE_DIR, *path))
@@ -543,7 +580,7 @@ class TreasureHunters:
         self.window.blit(self.small_cloud_2, (1000 + self.small_cloud_2_pos, 150))
         self.window.blit(self.small_cloud_2, (1000 + self.small_cloud_2_pos + 1500, 150))
         # Small Cloud 3
-        if self.small_cloud_2_pos > -1500:
+        if self.small_cloud_3_pos > -1500:
             self.small_cloud_3_pos -= 0.2
         else:
             self.small_cloud_3_pos = 0
@@ -734,16 +771,40 @@ class TreasureHunters:
 
         if self.warning_time % 20 < 10:
 
+            self.warning_surface.fill((0,0,0,0))
+
+            pg.draw.rect(
+                self.warning_surface,
+                (255,0,0,128),
+                (0,0,40,768)
+            )
+
             for warning in self.bomb_warnings:
 
-                pg.draw.line(
-                    self.window,
-                    (255,0,0),
-                    (warning["x"] - self.camera_x, 0),
-                    (warning["x"] - self.camera_x, 768),
-                    4
+                self.window.blit(
+                    self.warning_surface,
+                    (
+                        warning["x"] - 20 - self.camera_x,
+                        0
+                    )
                 )
 
+                warning_text = self.warning_font.render(
+                    "!",
+                    True,
+                    (255,255,255)
+                )
+
+                self.window.blit(
+                    warning_text,
+                    (
+                        warning["x"]
+                        - warning_text.get_width()/2
+                        - self.camera_x,
+
+                        350
+                    )
+                )
     def create_warnings(self):
 
         self.bomb_warnings.clear()
@@ -812,14 +873,24 @@ class TreasureHunters:
 
         for bomb in self.bombs:
 
-            pg.draw.circle(
-                self.window,
-                (0,0,0),
+            self.window.blit(
+                self.bomb_img,
                 (
-                    int(bomb["x"] - self.camera_x),
-                    int(bomb["y"] - self.camera_y)
-                ),
-                20
+                    bomb["x"] - 20 - self.camera_x,
+                    bomb["y"] - 20 - self.camera_y
+                )
+            )
+
+    def draw_explosions(self):
+
+        for explosion in self.explosions:
+
+            self.window.blit(
+                self.explosion_frames[0],
+                (
+                    explosion["x"] - 50 - self.camera_x,
+                    explosion["y"] - 50 - self.camera_y
+                )
             )
 
     def update_bombs(self):
@@ -845,12 +916,18 @@ class TreasureHunters:
             )
             if bomb_rect.colliderect(player_rect):
 
+                self.explosions.append({
+                    "x": bomb["x"],
+                    "y": bomb["y"],
+                    "frame": 0
+                })
+
                 self.game_over = True
                 bombs_to_remove.append(bomb)
                 continue
 
             tile_x = int(bomb["x"] // 64)
-            tile_y = int(bomb["y"] // 64)
+            tile_y = int((bomb["y"] + 20) // 64)
 
             if (
                 0 <= tile_y < len(self.map)
@@ -861,6 +938,11 @@ class TreasureHunters:
                 tile = self.map[tile_y][tile_x]
 
                 if tile in ['1','2','3','4','5','6','7','8','9']:
+                    self.explosions.append({
+                        "x": bomb["x"],
+                        "y": bomb["y"],
+                        "frame": 0
+                    })
                     bombs_to_remove.append(bomb)
                     continue
 
@@ -871,6 +953,20 @@ class TreasureHunters:
 
             if bomb in self.bombs:
                 self.bombs.remove(bomb)
+
+    def update_explosions(self):
+
+        remove = []
+
+        for explosion in self.explosions:
+
+            explosion["frame"] += 1
+
+            if explosion["frame"] > 20:
+                remove.append(explosion)
+
+        for explosion in remove:
+            self.explosions.remove(explosion)
     
     def check_win(self):
         player_rect = pg.Rect(
@@ -1210,7 +1306,9 @@ while True:
     jogo.bomb_manager()
     jogo.draw_bomb_warnings()
     jogo.update_bombs()
+    jogo.update_explosions()
     jogo.draw_bombs()
+    jogo.draw_explosions()
     jogo.draw_coins()
 
     if not jogo.game_over and not jogo.win:
